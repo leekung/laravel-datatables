@@ -2,7 +2,7 @@
 
 namespace Yajra\DataTables\Utilities;
 
-use Illuminate\Http\Request as BaseRequest;
+use support\Request as BaseRequest;
 
 /**
  * @mixin \Illuminate\Http\Request
@@ -19,7 +19,7 @@ class Request
      */
     public function __construct()
     {
-        $this->request = app('request');
+        $this->request = request();
     }
 
     /**
@@ -65,7 +65,7 @@ class Request
      */
     public function isSearchable(): bool
     {
-        return $this->request->input('search.value') != '';
+        return $this->request->input('search')['value'] != '';
     }
 
     /**
@@ -76,7 +76,7 @@ class Request
      */
     public function isRegex(int $index): bool
     {
-        return $this->request->input("columns.$index.search.regex") === 'true';
+        return $this->request->input("columns")[$index]['search']['value'] === 'true';
     }
 
     /**
@@ -93,10 +93,10 @@ class Request
         $orderable = [];
         for ($i = 0, $c = count((array) $this->request->input('order')); $i < $c; $i++) {
             /** @var int $order_col */
-            $order_col = $this->request->input("order.$i.column");
+            $order_col = $this->request->input("order")[$i]['column'];
 
             /** @var string $direction */
-            $direction = $this->request->input("order.$i.dir");
+            $direction = $this->request->input("order")[$i]['dir'];
 
             $order_dir = strtolower($direction) === 'asc' ? 'asc' : 'desc';
             if ($this->isColumnOrderable($order_col)) {
@@ -125,7 +125,8 @@ class Request
      */
     public function isColumnOrderable(int $index): bool
     {
-        return $this->request->input("columns.$index.orderable", 'true') == 'true';
+        $column = $this->request->input("columns")[$index]['orderable'] ?? 'true';
+        return $column == 'true';
     }
 
     /**
@@ -155,20 +156,21 @@ class Request
      */
     public function isColumnSearchable(int $i, bool $column_search = true): bool
     {
+        $searchable = $this->request->input("columns")[$i]['searchable'] ?? 'true';
         if ($column_search) {
             return
                 (
-                    $this->request->input("columns.$i.searchable", 'true') === 'true'
+                    $searchable === 'true'
                     ||
-                    $this->request->input("columns.$i.searchable", 'true') === true
+                    $searchable === true
                 )
                 && $this->columnKeyword($i) != '';
         }
 
         return
-            $this->request->input("columns.$i.searchable", 'true') === 'true'
+            $searchable === 'true'
             ||
-            $this->request->input("columns.$i.searchable", 'true') === true;
+            $searchable === true;
     }
 
     /**
@@ -180,7 +182,7 @@ class Request
     public function columnKeyword(int $index): string
     {
         /** @var string $keyword */
-        $keyword = $this->request->input("columns.$index.search.value") ?? '';
+        $keyword = $this->request->input("columns")[$index]['search']['value'] ?? '';
 
         return $this->prepareKeyword($keyword);
     }
@@ -208,7 +210,7 @@ class Request
     public function keyword(): string
     {
         /** @var string $keyword */
-        $keyword = $this->request->input('search.value') ?? '';
+        $keyword = $this->request->input('search')['value'] ?? '';
 
         return $this->prepareKeyword($keyword);
     }
@@ -222,7 +224,7 @@ class Request
     public function columnName(int $i): ?string
     {
         /** @var string[] $column */
-        $column = $this->request->input("columns.$i");
+        $column = $this->request->input("columns")[$i];
 
         return (isset($column['name']) && $column['name'] != '') ? $column['name'] : $column['data'];
     }

@@ -12,6 +12,8 @@ use Yajra\DataTables\Contracts\DataTable;
 use Yajra\DataTables\Contracts\Formatter;
 use Yajra\DataTables\Processors\DataProcessor;
 use Yajra\DataTables\Utilities\Helper;
+use support\Log;
+use support\Response;
 
 /**
  * @method static setTransformer($transformer)
@@ -915,9 +917,9 @@ abstract class DataTableAbstract implements DataTable
      * Render json response.
      *
      * @param  array  $data
-     * @return \Illuminate\Http\JsonResponse
+     * @return Response
      */
-    protected function render(array $data): JsonResponse
+    protected function render(array $data): Response
     {
         $output = $this->attachAppends([
             'draw' => $this->request->draw(),
@@ -934,12 +936,7 @@ abstract class DataTableAbstract implements DataTable
             $output['searchPanes']['options'][$column] = $searchPane['options'];
         }
 
-        return new JsonResponse(
-            $output,
-            200,
-            $this->config->jsonHeaders(),
-            $this->config->jsonOptions()
-        );
+        return json($output);
     }
 
     /**
@@ -984,9 +981,9 @@ abstract class DataTableAbstract implements DataTable
             throw $exception;
         }
 
-        $this->getLogger()->error($exception);
+        Log::error($exception);
 
-        return new JsonResponse([
+        return json([
             'draw' => $this->request->draw(),
             'recordsTotal' => $this->totalRecords,
             'recordsFiltered' => 0,

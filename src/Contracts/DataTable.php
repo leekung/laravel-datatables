@@ -2,8 +2,8 @@
 
 namespace Yajra\DataTables\Contracts;
 
-use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Collection;
+use support\Response;
 
 interface DataTable
 {
@@ -70,7 +70,7 @@ interface DataTable
      * Organizes works.
      *
      * @param  bool  $mDataSupport
-     * @return \Illuminate\Http\JsonResponse
+     * @return Response
      */
-    public function make($mDataSupport = true): JsonResponse;
+    public function make($mDataSupport = true): Response;
 }

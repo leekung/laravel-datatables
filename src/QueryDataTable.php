@@ -7,11 +7,11 @@ use Illuminate\Contracts\Database\Query\Builder as QueryBuilder;
 use Illuminate\Database\Connection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Query\Expression;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Yajra\DataTables\Utilities\Helper;
+use support\Db;
+use support\Response;
 
 class QueryDataTable extends DataTableAbstract
 {
@@ -113,8 +113,8 @@ class QueryDataTable extends DataTableAbstract
     public function __construct(QueryBuilder $builder)
     {
         $this->query = $builder;
-        $this->request = app('datatables.request');
-        $this->config = app('datatables.config');
+        $this->request = new \Yajra\DataTables\Utilities\Request;
+        $this->config = new \Yajra\DataTables\Utilities\Config;
         $this->columns = $builder->columns;
 
         if ($this->config->isDebugging()) {
@@ -148,11 +148,11 @@ class QueryDataTable extends DataTableAbstract
      * Organizes works.
      *
      * @param  bool  $mDataSupport
-     * @return \Illuminate\Http\JsonResponse
+     * @return Response
      *
      * @throws \Exception
      */
-    public function make($mDataSupport = true): JsonResponse
+    public function make($mDataSupport = true): Response
     {
         try {
             $results = $this->prepareQuery()->results();
@@ -215,7 +215,7 @@ class QueryDataTable extends DataTableAbstract
         $builder = clone $this->query;
 
         if ($this->isComplexQuery($builder)) {
-            $builder->select(DB::raw('1 as dt_row_count'));
+            $builder->select(Db::raw('1 as dt_row_count'));
             if ($this->ignoreSelectInCountQuery || ! $this->isComplexQuery($builder)) {
                 return $this->getConnection()
                     ->query()

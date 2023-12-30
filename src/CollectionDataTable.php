@@ -10,6 +10,7 @@ use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
+use support\Response;
 
 class CollectionDataTable extends DataTableAbstract
 {
@@ -41,8 +42,8 @@ class CollectionDataTable extends DataTableAbstract
      */
     public function __construct(Collection $collection)
     {
-        $this->request = app('datatables.request');
-        $this->config = app('datatables.config');
+        $this->request = new \Yajra\DataTables\Utilities\Request;
+        $this->config = new \Yajra\DataTables\Utilities\Config;
         $this->collection = $collection;
         $this->original = $collection;
         $this->columns = array_keys($this->serialize($collection->first()));
@@ -158,11 +159,11 @@ class CollectionDataTable extends DataTableAbstract
      * Organizes works.
      *
      * @param  bool  $mDataSupport
-     * @return \Illuminate\Http\JsonResponse
+     * @return Response
      *
      * @throws \Exception
      */
-    public function make($mDataSupport = true): JsonResponse
+    public function make($mDataSupport = true): Response
     {
         try {
             $this->totalRecords = $this->totalCount();

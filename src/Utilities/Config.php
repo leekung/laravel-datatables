@@ -3,23 +3,10 @@
 namespace Yajra\DataTables\Utilities;
 
 use Illuminate\Contracts\Config\Repository;
+use Webman\Config as BaseConfig;
 
 class Config
 {
-    /**
-     * @var \Illuminate\Contracts\Config\Repository
-     */
-    private Repository $repository;
-
-    /**
-     * Config constructor.
-     *
-     * @param  \Illuminate\Contracts\Config\Repository  $repository
-     */
-    public function __construct(Repository $repository)
-    {
-        $this->repository = $repository;
-    }
 
     /**
      * Check if config uses wild card search.
@@ -28,7 +15,7 @@ class Config
      */
     public function isWildcard(): bool
     {
-        return (bool) $this->repository->get('datatables.search.use_wildcards', false);
+        return (bool) BaseConfig::get('datatables.search.use_wildcards', false);
     }
 
     /**
@@ -38,7 +25,7 @@ class Config
      */
     public function isSmartSearch(): bool
     {
-        return (bool) $this->repository->get('datatables.search.smart', true);
+        return (bool) BaseConfig::get('datatables.search.smart', true);
     }
 
     /**
@@ -48,7 +35,7 @@ class Config
      */
     public function isCaseInsensitive(): bool
     {
-        return (bool) $this->repository->get('datatables.search.case_insensitive', false);
+        return (bool) BaseConfig::get('datatables.search.case_insensitive', false);
     }
 
     /**
@@ -58,7 +45,7 @@ class Config
      */
     public function isDebugging(): bool
     {
-        return (bool) $this->repository->get('app.debug', false);
+        return (bool) BaseConfig::get('app.debug', false);
     }
 
     /**
@@ -70,7 +57,7 @@ class Config
      */
     public function get($key, $default = null)
     {
-        return $this->repository->get($key, $default);
+        return BaseConfig::get($key, $default);
     }
 
     /**
@@ -82,7 +69,7 @@ class Config
      */
     public function set($key, $value = null)
     {
-        $this->repository->set($key, $value);
+        
     }
 
     /**
@@ -92,7 +79,7 @@ class Config
      */
     public function isMultiTerm(): bool
     {
-        return (bool) $this->repository->get('datatables.search.multi_term', true);
+        return (bool) BaseConfig::get('datatables.search.multi_term', true);
     }
 
     /**
@@ -102,19 +89,19 @@ class Config
      */
     public function isStartsWithSearch(): bool
     {
-        return (bool) $this->repository->get('datatables.search.starts_with', false);
+        return (bool) BaseConfig::get('datatables.search.starts_with', false);
     }
 
     public function jsonOptions(): int
     {
         /** @var int $options */
-        $options = $this->repository->get('datatables.json.options', 0);
+        $options = BaseConfig::get('datatables.json.options', 0);
 
         return $options;
     }
 
     public function jsonHeaders(): array
     {
-        return (array) $this->repository->get('datatables.json.header', []);
+        return (array) BaseConfig::get('datatables.json.header', []);
     }
 }

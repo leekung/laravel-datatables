@@ -104,7 +104,7 @@ class Helper
             $arguments = self::reflectCallableParameters($content);
 
             if (count($arguments) > 0) {
-                return app()->call($content, [$arguments[0]->name => $param]);
+                return DummyContainer::call($content, [$arguments[0]->name => $param]);
             }
 
             return $content($param);

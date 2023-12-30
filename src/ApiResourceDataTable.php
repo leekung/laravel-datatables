@@ -37,8 +37,8 @@ class ApiResourceDataTable extends CollectionDataTable
     {
         /** @var \Illuminate\Support\Collection<(int|string), array> $collection */
         $collection = collect($resourceCollection)->pluck('resource');
-        $this->request = app('datatables.request');
-        $this->config = app('datatables.config');
+        $this->request = new \Yajra\DataTables\Utilities\Request;
+        $this->config = new \Yajra\DataTables\Utilities\Config;
         $this->collection = $collection;
         $this->original = $collection;
         $this->columns = array_keys($this->serialize($collection->first()));
