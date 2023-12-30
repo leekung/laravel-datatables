@@ -1,5 +1,5 @@
 {
-  "name": "leekung/laravel-datatables",
+  "name": "leekung/laravel-datatables-oracle",
   "description": "jQuery DataTables API for Laravel 4|5|6|7|8|9|10",
   "keywords": [
     "laravel",
